@@ -1,4 +1,3 @@
-const { where } = require('sequelize');
 const Product = require('../models/product');
 const Cart = require('../models/cart');
 const CartItem = require('../models/cart-item')
@@ -22,24 +21,7 @@ exports.editproduct = (req,res,next)=>{
       return ;
     }
     const prodId = req.params.productId ;
-    // Product.findById(prodId,(product)=>{
-
-    //   if(!product) { res.redirect('/'); return ;}
-
-    //   res.render('admin/add-product',{
-    //     pageTitle: 'Edit Product',
-    //     path: '/admin/edit-product',
-    //     formsCSS: true,
-    //     productCSS: true,
-    //     activeAddProduct: true,
-    //     editing:editMode ,
-    //     product:product
-    //   })
-
-    // })
-
-    // with sequelizer
-    Product.findByPk(prodId)
+    Product.findById(prodId)
     .then((product)=>{
       if(!product) { res.redirect('/'); return ;}
       res.render('admin/add-product',{
@@ -62,24 +44,14 @@ exports.posteditProduct=(req,res,next)=>{
     const imageUrl = req.body.imageUrl ;
     const price = req.body.price ;
     const desc = req.body.description ;
-    // const product = new Product(prodId,title,imageUrl,desc,price) ;
-    // product.save();
-    // res.redirect('/products') ;
-
-    // with sequelizer :-
-    Product.findByPk(prodId)
-    .then(product=>{
-      product.title=title;
-      product.price=price;
-      product.imageUrl=imageUrl;
-      product.description=desc ;
-      return product.save();
-    })
+    const product = new Product(title,imageUrl,price,desc,prodId,req.user._id) ;
+    product.save()
     .then(result=>{
       res.redirect('/') ;
     })
-    .catch(err=>console.log(err))
-   
+    .catch(err=>{
+      console.log(err) ;
+    })
 }
 
 exports.postAddProduct = (req, res, next) => {
@@ -87,36 +59,18 @@ exports.postAddProduct = (req, res, next) => {
   const imageUrl = req.body.imageUrl;
   const price = req.body.price;
   const description = req.body.description;
-  // without using sequelizer
-  // const product = new Product(null,title, imageUrl, description, price);
-  // product.save()
-  // .then(res.redirect('/'))
-  // .catch(err=>console.log(err))
-
-  // with sequilizer :-
-  req.user.createProduct({
-    title:title,
-    imageUrl:imageUrl,
-    price:price,
-    description:description
+  const product = new Product(title,imageUrl,price,description,null,req.user._id) ;
+  product.save()
+  .then(result=>{
+    res.redirect('/') ;
   })
-  .then(()=>{console.log('Created'); res.redirect('/')})
-  .catch(err=>console.log(err))
+  .catch(err=>{
+    console.log(err) ;
+  })
 };
 
 exports.getProducts = (req, res, next) => {
-  // without sequelizer :-
-
-  // Product.fetchAll(products => {
-  //   res.render('admin/products', {
-  //     prods: products,
-  //     pageTitle: 'Admin Products',
-  //     path: '/admin/products'
-  //   });
-  // });
-
-  // with sequelizer :_
- req.user.getProducts()
+ Product.fetchall()
   .then(products=>{
       res.render('admin/products', {
       prods: products,
@@ -130,31 +84,11 @@ exports.getProducts = (req, res, next) => {
 
 exports.deleteproduct = (req,res,next)=>{
   const prodId = req.body.productId ;
-  Cart.findAll({include:{
-    model:Product,
-    where : {id : prodId}
-  }})
-  .then(carts=>{
-    console.log(carts) ;
-    let promiseChain = Promise.resolve() ;
-      for(let cart of carts)
-        {
-          promiseChain = promiseChain
-          .then(()=>cart.getProducts({where:{id:prodId}})) 
-          .then(products=>{
-            const product=products[0];
-            cart.totalprice -= (product.cartItem.quantity*product.price) ;
-            return cart.save();
-          })
-          .catch(err=>console.log(err))
-        }
-        return promiseChain ;
-  })
-  .then(()=>{
-        return  Product.destroy({where:{id:prodId}}) ;
-  })
+  Product.deleteById(prodId)
   .then(result=>{
-    res.redirect('/products') ;
+     res.redirect('/') ;
   })
-  .catch(err=>{console.log(err)})
+ .catch(err=>{
+  console.log(err) ;
+ })
 }

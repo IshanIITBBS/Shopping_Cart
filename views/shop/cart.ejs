@@ -8,9 +8,9 @@
         <%for(let product of products){%>       
             <li class="cartitem centered">
             <div><%= product.title %> </div>
-            <div style="color: rgb(60, 0, 255); font-weight:bold"> Quantity :  <%=product.cartItem.quantity %></div> 
+            <div style="color: rgb(60, 0, 255); font-weight:bold"> Quantity :  <%=product.quantity %></div> 
             <form action="/delete-product" method="POST" >
-                <input type="hidden" value="<%=product.id%>" name="productId">
+                <input type="hidden" value="<%=product._id%>" name="productId">
                 <input type="hidden" value="<%=product.price%>" name="productPrice">
                 <button type="submit" class="btn">Delete</button>
             </form>
