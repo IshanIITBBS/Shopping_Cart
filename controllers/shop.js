@@ -83,37 +83,15 @@ exports.deleteCartproduct = (req, res, next) => {
 }
 
 exports.getPostOrder=(req,res,next)=>{
- let fetchedcart ;
-  req.user.getCart()
-  .then(cart=>{
-    fetchedcart=cart ;
-    return cart.getProducts()
-  })
-  .then((products)=>{
-      return req.user.createOrder()
-              .then(order=>{
-                  return order.addProducts(products.map(product=>{
-                   product.orderItem = { quantity : product.cartItem.quantity } ;
-                   return product ;
-                 }))
-              })
-              .catch(err=>console.log(err))
-  })
+  req.user.addOrder()
   .then(()=>{
-    fetchedcart.totalprice=0;
-    return fetchedcart.save();
-  })
-  .then(()=>{
-    return fetchedcart.setProducts(null) ;
-  })
-  .then(result=>{
-    res.redirect('/orders') ;
+       res.redirect('/orders') ;
   })
   .catch(err=>console.log(err))
 }
 
 exports.getOrders = (req, res, next) => {
-  req.user.getOrders({include:['products']})
+  req.user.getOrders()
   .then(orders=>{
     res.render('shop/orders',{
        path: '/orders',

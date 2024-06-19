@@ -47,7 +47,7 @@ module.exports= class User {
         {$set : {cart : cart}}) 
     }
 
-
+   
     getCart()
     {
            let prodIds = this.cart.items.map(item=>{
@@ -79,5 +79,30 @@ module.exports= class User {
         cart.totalprice -= (prodPrice*deleteditem.quantity) ;
         const db = getdb() ;
        return db.collection('users').updateOne({_id:this._id},{$set:{cart:{items:cart.items,totalprice : cart.totalprice}}})
+    }
+
+    addOrder()
+    {
+        const db = getdb();
+       return this.getCart()
+        .then(products=>{
+            const order = {
+                items :products ,
+                user :{
+                    _id : this._id ,
+                    name : this.name 
+                }
+            } ;
+            return db.collection('orders').insertOne(order) ;
+        })
+        .then(()=>{
+            return db.collection('users').updateOne({_id:this._id},{$set:{ cart:{items :[]}}}) ;
+        })
+    }
+
+    getOrders()
+    {
+        const db = getdb();
+        return db.collection('orders').find({'user._id':this._id}).toArray() ;
     }
 }

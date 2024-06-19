@@ -8,10 +8,10 @@
             <ul>
            <% for(let order of orders){ %>
               <li>
-                <div><%= order.id %></div>
+                <div><%= order._id %></div>
                  <ul >
-                  <%for(let product of order.products){%>
-                    <div><%= product.title %> <%= product.orderItem.quantity %></div>
+                  <%for(let product of order.items){%>
+                    <div><%= product.title %> <%= product.quantity %></div>
                   <%}%>
                 </ul>
               </li>
