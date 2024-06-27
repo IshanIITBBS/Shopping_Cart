@@ -23,6 +23,18 @@
                 <a class="<%= path === '/admin/products' ? 'active' : '' %>" href="/admin/products">Admin Products
                 </a>
             </li>
+           
+            <li class="login">
+               <% if (loggedIn ) { %>
+               <form action="/logOut" method="POST">
+                <input type="hidden" name="_csrf" value="<%=csrfToken%>">
+                  <button class="btn" type="submit">LogOut</button>
+               </form>
+               <% } else { %>
+                 <a href="/login"  class="<%= path === '/login'? 'active' : '' %>">Login</a>
+                 <a href="/signup" class="<%= path === '/signup'? 'active' : '' %>">Sign Up</a>
+               <% } %>
+            </li>
         </ul>
     </nav>
 </header>
@@ -49,5 +61,21 @@
                     <a class="<%= path === '/admin/products' ? 'active' : '' %>" href="/admin/products">Admin Products
                     </a>
                 </li>
+                
+                    <% if (loggedIn ) { %>
+                    <li class="mobile-nav__item">
+                    <form action="/logOut" method="POST">
+                        <input type="hidden" name="_csrf" value="<%=csrfToken%>">
+                       <button class="btn" type="submit">LogOut</button>
+                    </form>
+                     </li>
+                    <% } else { %>
+                    <li class="mobile-nav__item">
+                      <a href="/login"  class="<%= path === '/login'? 'active' : '' %>">Login</a>
+                    </li>
+                    <li class="mobile-nav__item">
+                      <a href="/signup" class="<%= path === '/signup'? 'active' : '' %>">Sign Up</a>
+                    </li>
+                    <% } %>
             </ul>
 </nav>

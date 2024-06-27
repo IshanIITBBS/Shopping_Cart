@@ -4,20 +4,22 @@ const express = require('express');
 
 const adminController = require('../controllers/admin');
 
+const logincheck = require('../middleware/logincheck').logincheck ;
+
 const router = express.Router();
 
 // /admin/add-product => GET
-router.get('/add-product', adminController.getAddProduct);
+router.get('/add-product',logincheck, adminController.getAddProduct);
 
 // /admin/products => GET
-router.get('/products', adminController.getProducts);
+router.get('/products',logincheck, adminController.getProducts);
 
-// /admin/add-product => POST
-router.post('/add-product', adminController.postAddProduct);
+ // /admin/add-product => POST
+router.post('/add-product', logincheck,adminController.postAddProduct);
 
-router.get('/edit-product/:productId',adminController.editproduct)
-router.post('/edit-product',adminController.posteditProduct)
+router.get('/edit-product/:productId',logincheck,adminController.editproduct)
+router.post('/edit-product',logincheck,adminController.posteditProduct)
 
-router.post('/delete-product',adminController.deleteproduct) ;
+router.post('/delete-product',logincheck,adminController.deleteproduct) ;
 
 module.exports = router;

@@ -1,0 +1,25 @@
+.login-form{
+    width: 20rem;
+    max-width: 90%;
+    margin: auto;
+    display: block;
+}
+
+.loginerror{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 10px;
+}
+
+.loginerror div{
+    padding: 13px ;
+    border: 2px solid red;
+   width: 25rem;
+    background-color: rgb(244, 192, 192);
+    color: red;
+    border-radius: 5px ;
+}
+
+

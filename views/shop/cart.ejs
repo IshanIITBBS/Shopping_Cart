@@ -7,11 +7,12 @@
         <ul>
         <%for(let product of products){%>       
             <li class="cartitem centered">
-            <div><%= product.title %> </div>
+            <div><%= product.productId.title %> </div>
             <div style="color: rgb(60, 0, 255); font-weight:bold"> Quantity :  <%=product.quantity %></div> 
             <form action="/delete-product" method="POST" >
-                <input type="hidden" value="<%=product._id%>" name="productId">
-                <input type="hidden" value="<%=product.price%>" name="productPrice">
+                <input type="hidden" name="_csrf" value="<%=csrfToken%>">
+                <input type="hidden" value="<%=product.productId._id%>" name="productId">
+                <input type="hidden" value="<%=product.productId.price%>" name="productPrice">
                 <button type="submit" class="btn">Delete</button>
             </form>
         </li>    
@@ -20,6 +21,7 @@
        <h3 class="centered" style="color: #f31f1f;">Total price = <%=totalprice%></h3>
        <div class="centered ">
         <form action="/create-order" method="POST">
+            <input type="hidden" name="_csrf" value="<%=csrfToken%>">
             <button type="submit"  class="btn">Order Now</button>
         </form>   
     </div>

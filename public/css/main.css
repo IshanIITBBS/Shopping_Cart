@@ -19,6 +19,14 @@ form {
   display: inline;
 }
 
+.login{
+  position: absolute;
+  right: 20px;
+}
+.login a{
+  color: white;
+  margin: 10px;
+}
 
 .centered{
   justify-content: center;
@@ -129,6 +137,15 @@ form {
   border-radius: 3px;
 }
 
+
+.login a:hover,
+.login a.active{
+ color: #ffeb3b;
+  font-weight: bold;
+}
+
+
+
 #side-menu-toggle {
   border: 1px solid white;
   font: inherit;
@@ -219,7 +236,7 @@ form {
   color: white;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 800px) {
   .main-header__nav {
     display: flex;
   }

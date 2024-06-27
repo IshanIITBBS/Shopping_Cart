@@ -11,7 +11,7 @@
                 <div><%= order._id %></div>
                  <ul >
                   <%for(let product of order.items){%>
-                    <div><%= product.title %> <%= product.quantity %></div>
+                    <div><%= product.product.title %> (<%=  product.quantity %>)</div>
                   <%}%>
                 </ul>
               </li>

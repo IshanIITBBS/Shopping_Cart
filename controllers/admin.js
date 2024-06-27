@@ -9,7 +9,8 @@ exports.getAddProduct = (req, res, next) => {
     formsCSS: true,
     productCSS: true,
     activeAddProduct: true,
-    editing:false
+    editing:false,
+    loggedIn:req.session.loggedIn
   });
 };
 
@@ -31,7 +32,8 @@ exports.editproduct = (req,res,next)=>{
         productCSS: true,
         activeAddProduct: true,
         editing:editMode ,
-        product:product
+        product:product,
+        loggedIn:req.session.loggedIn
       })
 
     })
@@ -44,8 +46,14 @@ exports.posteditProduct=(req,res,next)=>{
     const imageUrl = req.body.imageUrl ;
     const price = req.body.price ;
     const desc = req.body.description ;
-    const product = new Product(title,imageUrl,price,desc,prodId,req.user._id) ;
-    product.save()
+     Product.findById(prodId)
+     .then(product=>{
+      product.title = title ;
+      product.imageUrl = imageUrl;
+      product.price = price ;
+      product.description = desc ;
+      return product.save() ;
+     })
     .then(result=>{
       res.redirect('/') ;
     })
@@ -59,7 +67,13 @@ exports.postAddProduct = (req, res, next) => {
   const imageUrl = req.body.imageUrl;
   const price = req.body.price;
   const description = req.body.description;
-  const product = new Product(title,imageUrl,price,description,null,req.user._id) ;
+  const product = new Product({
+    title:title,
+    imageUrl:imageUrl,
+    price:price,
+    description:description,
+    UserId:req.user._id 
+  }) ;
   product.save()
   .then(result=>{
     res.redirect('/') ;
@@ -70,12 +84,13 @@ exports.postAddProduct = (req, res, next) => {
 };
 
 exports.getProducts = (req, res, next) => {
- Product.fetchall()
+Product.find({"UserId":req.user._id})
   .then(products=>{
       res.render('admin/products', {
       prods: products,
       pageTitle: 'Admin Products',
-      path: '/admin/products'
+      path: '/admin/products',
+      loggedIn:req.session.loggedIn
     });
   })
   .catch(err=>console.log(err))
@@ -84,7 +99,7 @@ exports.getProducts = (req, res, next) => {
 
 exports.deleteproduct = (req,res,next)=>{
   const prodId = req.body.productId ;
-  Product.deleteById(prodId)
+  Product.findByIdAndDelete(prodId)
   .then(result=>{
      res.redirect('/') ;
   })
